@@ -8,4 +8,4 @@ HISTFILESIZE=100
 alias cleanup='history -c ; rm -f ~/.bash_history ; exit'
 
 # shared configuration
-[ -f ~/.shrc_common ] && . ~/.shrc_common
+[[ -f ~/.shrc_common ]] && . ~/.shrc_common

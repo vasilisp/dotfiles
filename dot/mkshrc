@@ -14,4 +14,4 @@ export HISTFILE=~/.mksh_history
 alias cleanup='rm -f ~/.mksh_history ; unset HISTFILE ; exit'
 
 # shared configuration
-[ -f ~/.shrc_common ] && . ~/.shrc_common
+[[ -f ~/.shrc_common ]] && . ~/.shrc_common

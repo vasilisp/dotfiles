@@ -28,7 +28,7 @@ tw () {
 # emacs-related
 
 ef () {
-    [ -S /tmp/emacs$(id -u)/std ] || emacs --daemon
+    [[ -S "/tmp/emacs$(id -u)/std" ]] || emacs --daemon
     exec emacsclient -s std -nw "$@"
 }
 
@@ -44,4 +44,4 @@ e () {
 
 # machine-specific configuration
 
-[ -f ~/.shrc_local ] && . ~/.shrc_local
+[[ -f ~/.shrc_local ]] && . ~/.shrc_local
