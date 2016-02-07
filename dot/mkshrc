@@ -15,3 +15,6 @@ alias cleanup='rm -f ~/.mksh_history ; unset HISTFILE ; exit'
 
 # shared configuration
 [[ -f ~/.shrc_common ]] && . ~/.shrc_common
+
+# missing emacs-style keybindings
+bind '^W'=kill-region
