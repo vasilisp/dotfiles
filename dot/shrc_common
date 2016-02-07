@@ -36,6 +36,12 @@ alias ee='emacsclient --no-wait -s std'
 
 export GIT_EDITOR='emacsclient -s std'
 
+# general utils
+
+e () {
+    ("$@" 1>/dev/null 2>/dev/null &)
+}
+
 # machine-specific configuration
 
 [ -f ~/.shrc_local ] && . ~/.shrc_local
