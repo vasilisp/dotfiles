@@ -1,0 +1,41 @@
+# configuration that applies to both bash and mksh
+
+alias ll='ls -lh'
+
+case $(uname -o) in
+    FreeBSD) alias ls='ls -G' ;;
+    GNU/Linux) alias ls='ls --color=auto' ;;
+    *) ;;
+esac
+
+# tmux-related
+
+alias ta='
+    if tmux has -t std 2>/dev/null; then
+        exec tmux attach-session -t std -d
+    else
+        exec tmux new-session -s std
+    fi'
+
+tw () {
+    if tmux has -t std 2>/dev/null; then
+        tmux new-window -t std "$@"
+    else
+        tmux new-session -s std -d "$@"
+    fi
+}
+
+# emacs-related
+
+ef () {
+    [ -S /tmp/emacs$(id -u)/std ] || emacs --daemon
+    exec emacsclient -s std -nw "$@"
+}
+
+alias ee='emacsclient --no-wait -s std'
+
+export GIT_EDITOR='emacsclient -s std'
+
+# machine-specific configuration
+
+[ -f ~/.shrc_local ] && . ~/.shrc_local

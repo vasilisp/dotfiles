@@ -1,0 +1,17 @@
+# make sure we are mksh
+case $KSH_VERSION in
+*MIRBSD\ KSH*) ;;
+*) return 0 ;;
+esac
+
+# prompt
+PS1="[$(hostname):\${PWD##*/}]\$ "
+
+# enable history
+export HISTFILE=~/.mksh_history
+
+# delete history and quit
+alias cleanup='rm -f ~/.mksh_history ; unset HISTFILE ; exit'
+
+# shared configuration
+[ -f ~/.shrc_common ] && . ~/.shrc_common

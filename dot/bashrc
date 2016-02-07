@@ -1,72 +1,11 @@
-# general purpose aliases
-
-alias ll='ls -lh'
-
-case $OSTYPE in
-    freebsd*) alias ls='ls -G' ;;
-    linux-gnu*) alias ls='ls --color=auto' ;;
-    *) ;;
-esac
-
-# tmux-related
-
-alias ta='
-    if tmux has -t std &>/dev/null; then
-        exec tmux attach-session -t std -d
-    else
-        exec tmux new-session -s std
-    fi'
-
-tw () {
-    if tmux has -t std &>/dev/null; then
-        tmux new-window -t std "$*"
-    else
-        tmux new-session -s std -d "$*"
-    fi
-}
-
-# emacs-related
-
-ef () {
-    [ -S /tmp/emacs$UID/std ] || emacs --daemon
-    exec emacsclient -s std -nw "$@"
-}
-
-alias ee='emacsclient --no-wait -s std'
-
-export GIT_EDITOR='emacsclient -s std'
-
-# double fork (?)
-
-e () {
-    ("$@" &>/dev/null &)
-}
-
-# TeX
-
-lt () {
-    pdflatex "$1" && bibtex "$1" && pdflatex "$1" && pdflatex "$1"
-}
-
-xlt () {
-    xelatex "$1" && bibtex "$1" && xelatex "$1" && xelatex "$1"
-}
-
-texclean () {
-    while [ -n "$1" ]; do
-        rm -f "$1".{aux,dvi,pdf,log,toc,out,bbl,blg,nav,snm,vrb,lof,lor}
-        shift
-    done
-}
-
 # prompt
-
-export PS1='[\h:\W]\$ '
+PS1='[\h:\W]\$ '
 
 # limit history
-
 HISTFILESIZE=100
 
-# machine-specific stuff
+# delete history and quit
+alias cleanup='history -c ; rm -f ~/.bash_history ; exit'
 
-[ -f ~/.bashrc_local ] && . ~/.bashrc_local
+# shared configuration
+[ -f ~/.shrc_common ] && . ~/.shrc_common
