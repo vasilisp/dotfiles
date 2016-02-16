@@ -76,12 +76,13 @@
 ;; Tuareg and friends
 
 (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
-(autoload 'ocp-indent "ocp-indent" "Indent OCaml" t)
+(autoload 'ocp-setup-indent "ocp-indent" "Indent OCaml" t)
 (autoload 'merlin-mode "merlin" "Merlin mode" t)
 (autoload 'utop "utop" "Toplevel for OCaml" t)
 (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
 
 (add-hook 'tuareg-mode-hook 'merlin-mode)
+(add-hook 'tuareg-mode-hook 'ocp-setup-indent)
 
 (setq auto-mode-alist
       (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
