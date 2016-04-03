@@ -14,7 +14,7 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list 'package-archives
-               '("marmalade" . "http://marmalade-repo.org/packages/"))
+               '("melpa" . "https://melpa.org/packages/"))
   (package-initialize))
 
 ;; automatically wrap text in text-mode
