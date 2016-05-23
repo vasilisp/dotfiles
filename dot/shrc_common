@@ -27,11 +27,6 @@ tw () {
 
 # emacs-related
 
-ef () {
-    [[ -S "/tmp/emacs$(id -u)/std" ]] || emacs --daemon
-    exec emacsclient -s std -nw "$@"
-}
-
 alias ee='emacsclient --no-wait -s std'
 
 export GIT_EDITOR='emacsclient -s std'
