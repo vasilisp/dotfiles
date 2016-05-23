@@ -27,8 +27,6 @@ tw () {
 
 # emacs-related
 
-alias ee='emacsclient --no-wait -s std'
-
 export GIT_EDITOR='emacsclient -s std'
 
 # general utils
