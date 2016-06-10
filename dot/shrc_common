@@ -2,9 +2,9 @@
 
 alias ll='ls -lh'
 
-case $(uname -o) in
+case $(uname) in
     FreeBSD) alias ls='ls -G' ;;
-    GNU/Linux) alias ls='ls --color=auto' ;;
+    Linux) alias ls='ls --color=auto' ;;
     *) ;;
 esac
 

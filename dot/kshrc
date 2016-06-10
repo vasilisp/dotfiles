@@ -1,6 +1,6 @@
-# make sure we are mksh
+# make sure we are *ksh
 case $KSH_VERSION in
-*MIRBSD\ KSH*) ;;
+*MIRBSD\ KSH*|*PD\ KSH*) ;;
 *) return 0 ;;
 esac
 
@@ -8,10 +8,10 @@ esac
 PS1="[$(hostname):\${PWD##*/}]\$ "
 
 # enable history
-export HISTFILE=~/.mksh_history
+export HISTFILE=~/.ksh_history
 
 # delete history and quit
-alias cleanup='rm -f ~/.mksh_history ; unset HISTFILE ; exit'
+alias cleanup='rm -f ~/.ksh_history ; unset HISTFILE ; exit'
 
 # shared configuration
 [[ -f ~/.shrc_common ]] && . ~/.shrc_common
