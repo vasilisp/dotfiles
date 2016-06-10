@@ -8,7 +8,11 @@ fi
 
 # if running mksh
 case $KSH_VERSION in
-    *MIRBSD\ KSH*|*PD\ KSH*) [ -f "$HOME/.kshrc" ] && . "$HOME/.kshrc" ;;
+    *MIRBSD\ KSH*|*PD\ KSH*)
+        ENV="$HOME/.kshrc"
+        [ -f "$ENV" ] && . "$ENV"
+        export ENV
+        ;;
     *) ;;
 esac
 
