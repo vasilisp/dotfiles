@@ -16,9 +16,14 @@ case $KSH_VERSION in
     *) ;;
 esac
 
-# set PATH so it includes user's private bin if it exists
+# if user's private bin exists, add it to $PATH
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
+fi
+
+# if dotfiles-associated bin exists, add it to $PATH
+if [ -d "$HOME/dotfiles/bin" ] ; then
+    PATH="$HOME/dotfiles/bin:$PATH"
 fi
 
 # OPAM configuration

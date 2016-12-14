@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if tmux has -t std 2>/dev/null; then
+  exec tmux new-window -t std "$*"
+else 
+  exec tmux new-session -s std -d "$*"
+fi

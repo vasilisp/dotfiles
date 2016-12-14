@@ -1,0 +1,7 @@
+#!/bin/sh  
+
+if tmux has -t std 2>/dev/null; then
+  exec tmux attach-session -t std -d
+else 
+  exec tmux new-session -s std
+fi
