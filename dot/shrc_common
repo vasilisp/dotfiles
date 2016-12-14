@@ -8,6 +8,8 @@ case $(uname) in
     *) ;;
 esac
 
+alias gc='git clean -dfx'
+
 # tmux-related
 
 alias ta='
@@ -25,9 +27,25 @@ tw () {
     fi
 }
 
+otw () {
+    if tmux has -t std 2>/dev/null; then
+        tmux new-window -t std -n "$1" opam config exec --switch "$1" \
+             -- "$SHELL"
+    else
+        tmux new-session -s std -n "$1" -d opam config exec --switch "$1" \
+             -- "$SHELL"
+    fi
+}
+
 # emacs-related
 
 export GIT_EDITOR='emacsclient -s std'
+
+# TeX-related
+
+lt () {
+    pdflatex "$1" && bibtex "$1" && pdflatex "$1" && pdflatex "$1"
+}
 
 # general utils
 
