@@ -28,12 +28,14 @@ tw () {
 }
 
 otw () {
+    typeset TITLE="$1"
+    [ -z "$2" ] || TITLE="$TITLE-$2"
     if tmux has -t std 2>/dev/null; then
-        tmux new-window -t std -n "$1" opam config exec --switch "$1" \
-             -- "$SHELL"
+        tmux new-window -t std -n "$TITLE" \
+             opam config exec --switch "$1" -- "$SHELL"
     else
-        tmux new-session -s std -n "$1" -d opam config exec --switch "$1" \
-             -- "$SHELL"
+        tmux new-session -s std -n "$TITLE" -d \
+             opam config exec --switch "$1" -- "$SHELL"
     fi
 }
 
