@@ -43,6 +43,7 @@ otw () {
 
 # emacs-related
 
+export EDITOR='emacsclient -s std'
 export GIT_EDITOR='emacsclient -s std'
 
 # TeX-related
