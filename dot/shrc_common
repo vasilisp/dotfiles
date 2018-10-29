@@ -10,6 +10,8 @@ esac
 
 alias gc='git clean -dfx'
 
+alias gg='git grep'
+
 alias grec='grep -RI -D skip'
 
 # tmux-related
@@ -45,6 +47,8 @@ otw () {
 
 export EDITOR='emacsclient -s std'
 export GIT_EDITOR='emacsclient -s std'
+
+alias ef='exec ef'
 
 # TeX-related
 
