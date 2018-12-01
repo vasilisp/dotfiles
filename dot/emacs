@@ -97,11 +97,12 @@
 ;; setup environment variables using opam
 
 (if (executable-find "opam")
-    (dolist (var
-             (car
-              (read-from-string
-               (shell-command-to-string "opam config env --sexp"))))
-      (setenv (car var) (cadr var))))
+    (ignore-errors
+      (dolist (var
+               (car
+                (read-from-string
+                 (shell-command-to-string "opam config env --sexp"))))
+        (setenv (car var) (cadr var)))))
 
 ;; update the emacs path and load path for OPAM-installed stuff
 
