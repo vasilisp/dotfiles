@@ -296,7 +296,7 @@ out and back in -->
     </keybind>
     <keybind key="W-t">
       <action name="Execute">
-        <command>urxvtcd</command>
+        <command>xterm</command>
       </action>
     </keybind>
     <keybind key="W-p">
