@@ -12,6 +12,8 @@ alias gc='git clean -dfx'
 
 alias gg='git grep'
 
+alias gfm='git fetch && git merge'
+
 alias grec='grep -RI -D skip'
 
 # tmux-related
