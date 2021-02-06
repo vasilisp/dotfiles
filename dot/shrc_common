@@ -61,7 +61,7 @@ lt () {
 # general utils
 
 e () {
-    ("$@" 1>/dev/null 2>/dev/null &)
+    (setsid "$@" 1>/dev/null 2>/dev/null &)
 }
 
 # machine-specific configuration
