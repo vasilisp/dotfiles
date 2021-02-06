@@ -39,3 +39,11 @@ fi
     . "$HOME/.profile_local"
 
 PAGER=less; export PAGER
+
+if
+    [ -z "$DISPLAY" ] &&
+        [ "$(tty)" == "/dev/tty1" ] &&
+        [ -f "$HOME/.xinitrc" ]
+then
+  exec startx
+fi
