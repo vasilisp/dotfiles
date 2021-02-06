@@ -66,4 +66,4 @@ e () {
 
 # machine-specific configuration
 
-[[ -f ~/.shrc_local ]] && . ~/.shrc_local
+[ -f "$HOME/.shrc_local" ] && . "$HOME/.shrc_local"

@@ -8,13 +8,13 @@ esac
 PS1="[$(hostname):\${PWD##*/}]\$ "
 
 # enable history
-export HISTFILE=~/.ksh_history
+export HISTFILE="$HOME/.ksh_history"
 
 # delete history and quit
 alias cleanup='rm -f ~/.ksh_history ; unset HISTFILE ; exit'
 
 # shared configuration
-[[ -f ~/.shrc_common ]] && . ~/.shrc_common
+[ -f "$HOME/.shrc_common" ] && . "$HOME/.shrc_common"
 
 # missing emacs-style keybindings
 bind '^W'=kill-region

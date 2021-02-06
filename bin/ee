@@ -1,4 +1,4 @@
 #!/bin/sh
 
-[ -S /tmp/emacs$(id -u)/std ] || emacs --daemon
+[ -S "/tmp/emacs$(id -u)/std" ] || emacs --daemon
 exec emacsclient --no-wait -s std "$@"
