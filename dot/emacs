@@ -70,8 +70,9 @@
 ;; deft note-taking mode
 
 (setq deft-extension "txt")
-(setq deft-directory "~/Notes")
+(setq deft-directory "~/notes")
 (setq deft-text-mode 'markdown-mode)
+(setq deft-auto-save-interval 20)
 
 ;; Tuareg and friends
 
