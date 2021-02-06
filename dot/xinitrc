@@ -1,0 +1,10 @@
+# sync
+
+xrdb "$HOME/.Xresources"
+setxkbmap -option caps:ctrl_modifier
+xsetroot -solid rgb:11/11/11
+
+which xfce4-power-manager && xfce4-power-manager
+which tint2 && { tint2 & }
+
+exec ssh-agent openbox
