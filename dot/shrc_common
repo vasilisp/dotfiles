@@ -64,6 +64,10 @@ e () {
     (setsid "$@" 1>/dev/null 2>/dev/null &)
 }
 
+# PGP
+
+export GPG_TTY="$(tty)"
+
 # machine-specific configuration
 
 [ -f "$HOME/.shrc_local" ] && . "$HOME/.shrc_local"
