@@ -1,6 +1,6 @@
 # make sure we are *ksh
 case $KSH_VERSION in
-*MIRBSD\ KSH*|*PD\ KSH*) ;;
+*MIRBSD\ KSH*|*PD\ KSH*|*Version*) ;;
 *) return 0 ;;
 esac
 
@@ -17,4 +17,7 @@ alias cleanup='rm -f ~/.ksh_history ; unset HISTFILE ; exit'
 [ -f "$HOME/.shrc_common" ] && . "$HOME/.shrc_common"
 
 # missing emacs-style keybindings
-bind '^W'=kill-region
+case $KSH_VERSION in
+*MIRBSD\ KSH*|*PD\ KSH*) bind '^W'=kill-region ;;
+*) return 0 ;;
+esac
