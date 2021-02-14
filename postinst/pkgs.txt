@@ -1,6 +1,7 @@
 adwaita-qt
 aptitude
 build-essential
+debian-archive-keyring
 debsums
 emacs-nox
 exiv2
