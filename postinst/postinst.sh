@@ -54,8 +54,6 @@ EOF
 
 sudo chmod o-rwx "/etc/wpa_supplicant/wpa_supplicant-$NET.conf"
 
-sudo usermod -a -G netdev "$(whoami)"
-
 # disable cloud-init
 
 [ -d /etc/cloud ] && sudo touch /etc/cloud/cloud-init.disabled
@@ -87,5 +85,6 @@ sudo apt-get -y install $(cat "$HOME/dotfiles/postinst/pkgs.txt")
 # enable wpa_supplicant now that it exists
 
 sudo systemctl enable "wpa_supplicant@$NET"
+sudo usermod -a -G netdev "$(whoami)"
 
 echo OK
