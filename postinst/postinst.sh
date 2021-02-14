@@ -33,6 +33,11 @@ cd
 echo 'APT::Install-Recommends "false";' \
     | sudo tee /etc/apt/apt.conf.d/99rec
 
+sudo tee /etc/apt/apt.conf.d/20auto-upgrades <<EOF
+APT::Periodic::Update-Package-Lists "0";
+APT::Periodic::Unattended-Upgrade "0";
+EOF
+
 # systemd-networkd
 
 sudo tee "/etc/systemd/network/$NET.network" <<EOF
