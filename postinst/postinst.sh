@@ -80,6 +80,14 @@ EOF
 
 sudo chmod go-rwx /etc/polkit-1/localauthority/50-local.d/machinectl.pkla
 
+# disable chromium history
+
+[ -d /etc/chromium-browser/policies/managed ] ||
+    sudo mkdir -p /etc/chromium-browser/policies/managed
+
+echo '{"SavingBrowserHistoryDisabled" : true}' \
+    | sudo tee /etc/chromium-browser/policies/managed/no-history.json
+
 # if we want to install packages and are able to, go on
 
 [ "$1" = '-i' ] || exit 0
