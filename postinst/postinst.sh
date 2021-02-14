@@ -54,13 +54,15 @@ EOF
 
 sudo chmod o-rwx "/etc/wpa_supplicant/wpa_supplicant-$NET.conf"
 
-# disable cloud-init
+# disable unneeded services
 
-[ -d /etc/cloud ] && sudo touch /etc/cloud/cloud-init.disabled
-
-# disable accountsservice
+[ -d /etc/cloud ] &&
+    sudo touch /etc/cloud/cloud-init.disabled
 
 sudo systemctl disable accounts-daemon
+
+[ -f /etc/netplan/00-installer-config.yaml ] &&
+    sudo rm /etc/netplan/00-installer-config.yaml
 
 # use machinectl without a password
 
