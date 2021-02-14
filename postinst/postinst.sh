@@ -57,7 +57,7 @@ ctrl_interface_group=netdev
 update_config=1
 EOF
 
-sudo chmod o-rwx "/etc/wpa_supplicant/wpa_supplicant-$NET.conf"
+sudo chmod go-rwx "/etc/wpa_supplicant/wpa_supplicant-$NET.conf"
 
 # disable unneeded services
 
