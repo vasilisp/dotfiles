@@ -67,7 +67,7 @@ sudo systemctl disable accounts-daemon
 # use machinectl without a password
 
 sudo tee /etc/polkit-1/localauthority/50-local.d/machinectl.pkla <<EOF
-[Allow $(whoami) to use machinectl (shell|login)]
+[machinectl permissions]
 Identity=unix-user:$(whoami)
 Action=org.freedesktop.machine1.shell;org.freedesktop.machine1.login
 ResultActive=yes
