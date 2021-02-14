@@ -6,7 +6,6 @@ debian-archive-keyring
 debsums
 emacs-nox
 exiv2
-firefox
 fonts-liberation2
 keepassxc
 m4
