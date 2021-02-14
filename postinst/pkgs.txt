@@ -20,6 +20,7 @@ pmount
 pulseaudio
 ripgrep
 rlwrap
+shellcheck
 suckless-tools
 sysstat
 thunar
