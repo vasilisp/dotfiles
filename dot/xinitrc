@@ -7,7 +7,7 @@ xsetroot -solid rgb:11/11/11
 QT_STYLE_OVERRIDE=adwaita
 export QT_STYLE_OVERRIDE
 
+which wmdocker && { wmdocker & }
 which xfce4-power-manager && xfce4-power-manager
-which tint2 && { tint2 & }
 
 exec ssh-agent openbox
