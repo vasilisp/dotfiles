@@ -88,18 +88,26 @@ sudo chmod go-rwx /etc/polkit-1/localauthority/50-local.d/machinectl.pkla
 echo '{"SavingBrowserHistoryDisabled" : true}' \
     | sudo tee /etc/chromium-browser/policies/managed/no-history.json
 
-# if we want to install packages and are able to, go on
+# if we want to install packages, go on
 
 [ "$1" = '-i' ] || exit 0
-[ -f "$HOME/dotfiles/postinst/pkgs.txt" ] || exit 0
 
 sudo apt-get update
 sudo apt-get -y dist-upgrade
-sudo apt-get -y install $(cat "$HOME/dotfiles/postinst/pkgs.txt")
+
+[ -f "$HOME/dotfiles/postinst/pkgs.txt" ] &&
+    sudo apt-get -y install $(cat "$HOME/dotfiles/postinst/pkgs.txt")
 
 # enable wpa_supplicant now that it exists
 
 sudo systemctl enable "wpa_supplicant@$NET"
 sudo usermod -a -G netdev "$(whoami)"
+
+# install snaps too
+
+sudo snap refresh
+
+[ -f "$HOME/dotfiles/postinst/snaps.txt" ] &&
+    sudo snap install $(cat "$HOME/dotfiles/postinst/snaps.txt")
 
 echo OK
