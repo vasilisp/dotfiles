@@ -5,7 +5,7 @@ set -e
 FILES='bashrc profile shrc_common tmux.conf emacs'
 
 [ "$1" = '-x' ] &&
-    FILES="$FILES Xresources xinitrc config/openbox/rc.xml config/gtk-3.0/settings.ini"
+    FILES="$FILES Xresources xinitrc config/openbox/rc.xml config/tint2/tint2rc config/gtk-3.0/settings.ini"
 
 for FILE in $FILES; do
     [ -f "$HOME/dotfiles/dot/$FILE" ] || continue

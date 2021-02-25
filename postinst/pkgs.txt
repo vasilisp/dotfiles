@@ -24,8 +24,8 @@ shellcheck
 suckless-tools
 sysstat
 thunar
+tint2
 wireguard
-wmdocker
 wpagui
 xfce4-power-manager
 xorg
