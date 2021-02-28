@@ -5,10 +5,11 @@ set -e
 UNITS_PATH="$HOME/.config/systemd/user"
 
 # preconditions
-[ -d "$UNITS_PATH" ]
 which systemctl
 
 # ssh-agent (simpler unit than the default)
+
+mkdir -p "$UNITS_PATH"
 
 tee "$UNITS_PATH/ssh-agent.service" <<EOF
 [Unit]
@@ -32,6 +33,8 @@ EOF
 # emacs: only override SSH_AUTH_SOCK
 
 which emacs || exit 0
+
+mkdir -p "$UNITS_PATH/emacs.service.d"
 
 tee "$UNITS_PATH/emacs.service.d/override.conf" <<EOF
 [Service]
