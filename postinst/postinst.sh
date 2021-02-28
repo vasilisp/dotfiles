@@ -59,6 +59,17 @@ EOF
 
 sudo chmod go-rwx "/etc/wpa_supplicant/wpa_supplicant-$NET.conf"
 
+# control brightness without bloat
+
+sudo tee /lib/udev/rules.d/90-brightness.rules <<EOF
+ACTION=="add", SUBSYSTEM=="backlight", \\
+  RUN+="/bin/chown root:video /sys/class/backlight/%k/brightness"
+ACTION=="add", SUBSYSTEM=="backlight", \\
+  RUN+="/bin/chmod g+w /sys/class/backlight/%k/brightness"
+EOF
+
+sudo usermod -a -G video "$(whoami)"
+
 # disable unneeded services
 
 [ -d /etc/cloud ] &&
