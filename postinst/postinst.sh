@@ -123,7 +123,8 @@ sudo usermod -a -G netdev "$(whoami)"
 
 sudo snap refresh
 
-[ -f "$HOME/dotfiles/postinst/snaps.txt" ] &&
-    sudo snap install $(cat "$HOME/dotfiles/postinst/snaps.txt")
+if [ -f "$HOME/dotfiles/postinst/snaps.txt" ]; then
+    sudo snap install $(cat "$HOME/dotfiles/postinst/snaps.txt") || true
+fi
 
 echo OK
