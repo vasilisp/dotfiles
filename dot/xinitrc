@@ -4,4 +4,4 @@ xsetroot -solid rgb:11/11/11
 
 which tint2 && { tint2 & }
 
-exec ssh-agent openbox
+exec openbox

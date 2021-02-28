@@ -114,6 +114,11 @@ sudo apt-get -y dist-upgrade
 sudo systemctl enable "wpa_supplicant@$NET"
 sudo usermod -a -G netdev "$(whoami)"
 
+# systemd user services
+
+[ -f "$HOME/dotfiles/postinst/postinst-systemd-user.sh" ] &&
+    sh "$HOME/dotfiles/postinst/postinst-systemd-user.sh"
+
 # install snaps too
 
 sudo snap refresh
