@@ -1,5 +1,4 @@
-adwaita-icon-theme-full
-adwaita-qt
+acpi
 aptitude
 build-essential
 debian-archive-keyring
@@ -15,7 +14,6 @@ mksh
 moreutils
 mupdf
 openbox
-pavucontrol
 pmount
 pulseaudio
 ripgrep
@@ -23,11 +21,9 @@ rlwrap
 shellcheck
 suckless-tools
 sysstat
-thunar
 tint2
 wireguard
 wpagui
-xfce4-power-manager
 xorg
 xsltproc
 xterm

@@ -2,11 +2,6 @@ xrdb "$HOME/.Xresources"
 setxkbmap -option caps:ctrl_modifier
 xsetroot -solid rgb:11/11/11
 
-QT_STYLE_OVERRIDE=adwaita
-export QT_STYLE_OVERRIDE
-
 which tint2 && { tint2 & }
-sleep 0.5
-which xfce4-power-manager && xfce4-power-manager
 
 exec ssh-agent openbox
