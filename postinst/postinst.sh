@@ -75,7 +75,7 @@ sudo usermod -a -G video "$(whoami)"
 [ -d /etc/cloud ] &&
     sudo touch /etc/cloud/cloud-init.disabled
 
-sudo systemctl disable accounts-daemon
+sudo systemctl disable accounts-daemon atd multipathd
 
 [ -f /etc/netplan/00-installer-config.yaml ] &&
     sudo rm /etc/netplan/00-installer-config.yaml
