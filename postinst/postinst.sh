@@ -38,6 +38,10 @@ APT::Periodic::Update-Package-Lists "0";
 APT::Periodic::Unattended-Upgrade "0";
 EOF
 
+# ubuntu firewall
+
+sudo ufw enable
+
 # systemd-networkd
 
 sudo tee "/etc/systemd/network/$NET.network" <<EOF
