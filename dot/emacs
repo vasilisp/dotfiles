@@ -100,22 +100,23 @@
 
 ;; setup environment variables using opam
 
-(if (executable-find "opam")
-    (ignore-errors
-      (dolist (var
-               (car
-                (read-from-string
-                 (shell-command-to-string "opam config env --sexp"))))
-        (setenv (car var) (cadr var)))))
+(when (and (executable-find "opam")
+           (not (getenv "OPAM_SWITCH_PREFIX")))
+  (ignore-errors
+    (dolist (var
+             (car
+              (read-from-string
+               (shell-command-to-string "opam config env --sexp"))))
+      (setenv (car var) (cadr var)))))
 
 ;; update the emacs path and load path for OPAM-installed stuff
 
-(let ((op (getenv "OCAML_TOPLEVEL_PATH")))
+(let ((op (getenv "OPAM_SWITCH_PREFIX")))
   (when op
     (add-to-list 'load-path
-                 (expand-file-name "../../share/emacs/site-lisp" op))
+                 (expand-file-name "share/emacs/site-lisp" op))
     (add-to-list 'exec-path
-                 (expand-file-name "../../bin" op))))
+                 (expand-file-name "bin" op))))
 
 ;; server setup
 
