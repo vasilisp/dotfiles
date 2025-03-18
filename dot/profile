@@ -27,6 +27,10 @@ if [ -d "$HOME/.cargo/bin" ] ; then
     PATH="$HOME/.cargo/bin:$PATH"
 fi
 
+if [ -d "$(go env GOPATH)/bin" ]; then
+    PATH="$(go env GOPATH)/bin:$PATH"
+fi
+
 # OPAM configuration
 [ -f  "$HOME/.opam/opam-init/init.sh" ] &&
     . "$HOME/.opam/opam-init/init.sh" > /dev/null 2> /dev/null
