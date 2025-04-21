@@ -135,3 +135,13 @@
 (global-set-key (kbd "C-c c") 'compile)
 
 (global-set-key (kbd "C-c r") 'recompile)
+
+(add-hook
+ 'go-mode-hook
+ (lambda ()
+   (lsp-deferred)
+   (add-hook 'before-save-hook 'gofmt-before-save)
+   (setq-default)
+   (setq tab-width 4)
+   (setq standard-indent 4)
+   (setq indent-tabs-mode nil)))
