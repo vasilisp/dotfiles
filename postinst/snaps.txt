@@ -1,2 +1,2 @@
-brave
 chromium
+firefox
