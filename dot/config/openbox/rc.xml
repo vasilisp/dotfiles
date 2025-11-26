@@ -40,7 +40,7 @@ the file to $HOME/.config/openbox/ instead. -->
     <primaryMonitor/>
   </placement>
   <theme>
-    <name>Onyx</name>
+    <name>obtheme</name>
     <titleLayout>MLC</titleLayout>
     <!--
         available characters are NDSLIMC, each can occur at most once.
