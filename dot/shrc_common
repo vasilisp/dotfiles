@@ -77,6 +77,15 @@ if [ -z "$PYENV_ROOT" ] && [ -x "$HOME/.pyenv/bin/pyenv" ]; then
     eval "$(pyenv init -)"
 fi
 
+# FNM
+
+FNM_PATH="$HOME/.local/share/fnm"
+
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "$(fnm env)"
+fi
+
 # machine-specific configuration
 
 [ -f "$HOME/.shrc_local" ] && . "$HOME/.shrc_local"
