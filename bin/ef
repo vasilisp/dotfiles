@@ -1,4 +1,7 @@
 #!/bin/sh
 
-[ -S /tmp/emacs$(id -u)/std ] || emacs --daemon
+if ! emacsclient -s std -e '(emacs-pid)' >/dev/null 2>&1; then
+    emacs --daemon=std
+fi
+
 exec emacsclient -s std -nw "$@"

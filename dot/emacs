@@ -1,104 +1,70 @@
-;; unobtrusive backup files
+;; Fail fast: Emacs 30+
+(when (< emacs-major-version 30)
+  (error "This init requires Emacs 30+ (you have %s)" emacs-version))
 
-(setq backup-directory-alist `(("." . "~/.emacs-backup")))
+;;;; Backups / autosave
 
-;; generic settings
+(let ((dir (expand-file-name "~/.emacs-backup/")))
+  (make-directory dir t)
+  (setq backup-directory-alist `(("." . ,dir))))
 
 (setq auto-save-default nil)
-(setq column-number-mode t)
+
+;;;; Generic settings
+
+(column-number-mode 1)
 (setq-default indent-tabs-mode nil)
 (put 'downcase-region 'disabled nil)
 
-;; use package management
+;;;; Package management (builtin `package`, MELPA)
 
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list 'package-archives
-               '("melpa" . "https://melpa.org/packages/"))
-  (package-initialize))
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
-;; automatically wrap text in text-mode
+;;;; Text-mode: auto-fill
 
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'text-mode-hook #'auto-fill-mode)
 
-(setq paragraph-start "\\*\\|$"
-      paragraph-separate "$")
+;;;; Mail buffers (mutt / temp messages)
 
-;; W3M setup
-
-(setq browse-url-browser-function 'w3m-browse-url)
-
-(autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
-
-(defun w3m-new-buffer ()
-  "Opens a new, empty w3m buffer."
-  "creating new buffer faster than `w3m-copy-buffer'"
-  (interactive)
-  (w3m-goto-url-new-session "about://"))
-
-;; use mail-mode for Mutt and Sylpheed buffers
-
-(add-to-list 'auto-mode-alist '("/mutt-" . mail-mode))
+(add-to-list 'auto-mode-alist '("/mutt-"   . mail-mode))
 (add-to-list 'auto-mode-alist '("/tmpmsg-" . mail-mode))
 
-;; Linux-style C formatting
+;;;; C: Linux-ish formatting
 
-(add-hook
- 'c-mode-common-hook
- '(lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (local-set-key (kbd "RET") #'newline-and-indent)))
 
 (defun linux-c-mode ()
   "C mode with adjusted defaults for use with the Linux kernel."
   (interactive)
   (c-mode)
   (c-set-style "K&R")
-  (setq tab-width 8)
-  (setq indent-tabs-mode t)
-  (setq c-basic-offset 8))
+  (setq-local tab-width 8)
+  (setq-local indent-tabs-mode t)
+  (setq-local c-basic-offset 8))
 
 (add-to-list 'auto-mode-alist '("\\.[ch]\\'" . linux-c-mode))
 
-;; markdown-mode
+;;;; Markdown (optional)
 
-(autoload 'markdown-mode "markdown-mode"
-  "Major mode for editing Markdown files" t)
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" "\\.markdown\\'"))
 
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+;;;; OCaml tooling (optional, degrades gracefully)
 
-;; deft note-taking mode
-
-(setq deft-extension "txt")
-(setq deft-directory "~/notes")
-(setq deft-text-mode 'markdown-mode)
-(setq deft-auto-save-interval 20)
-
-;; Tuareg and friends
-
-(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
-(autoload 'ocp-setup-indent "ocp-indent" "Indent OCaml" t)
-(autoload 'utop "utop" "Toplevel for OCaml" t)
-(autoload 'camldebug "camldebug" "Run the Caml debugger" t)
-(autoload 'merlin-mode "merlin" "Merlin mode" t)
-
-(add-hook 'tuareg-mode-hook 'ocp-setup-indent)
-(add-hook 'tuareg-mode-hook 'merlin-mode)
-(add-hook 'caml-mode-hook 'merlin-mode)
-
-(setq auto-mode-alist
-      (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
-
-(setq auto-mode-alist
-      (cons '("\\.eliom\\w?" . tuareg-mode) auto-mode-alist))
-
-(setq tuareg-in-indent 0)
-
-(add-hook
- 'tuareg-mode-hook
- '(lambda () (add-hook 'before-save-hook 'delete-trailing-whitespace)))
-
-;; setup environment variables using opam
+(use-package tuareg
+  :ensure t
+  :mode ("\\.mli?\\'")
+  :custom
+  (tuareg-in-indent 0)
+  :hook
+  (tuareg-mode . (lambda ()
+                   (add-hook 'before-save-hook
+                             #'delete-trailing-whitespace
+                             nil t))))
 
 (when (and (executable-find "opam")
            (not (getenv "OPAM_SWITCH_PREFIX")))
@@ -109,39 +75,55 @@
                (shell-command-to-string "opam config env --sexp"))))
       (setenv (car var) (cadr var)))))
 
-;; update the emacs path and load path for OPAM-installed stuff
-
 (let ((op (getenv "OPAM_SWITCH_PREFIX")))
-  (when op
-    (add-to-list 'load-path
-                 (expand-file-name "share/emacs/site-lisp" op))
-    (add-to-list 'exec-path
-                 (expand-file-name "bin" op))))
+  (when (and op (file-directory-p op))
+    (add-to-list 'load-path (expand-file-name "share/emacs/site-lisp" op))
+    (add-to-list 'exec-path (expand-file-name "bin" op))))
 
-;; server setup
+(when (locate-library "ocp-indent")
+  (autoload 'ocp-setup-indent "ocp-indent" "Indent OCaml using ocp-indent." t)
+  (add-hook 'tuareg-mode-hook #'ocp-setup-indent))
+
+(when (locate-library "merlin")
+  (autoload 'merlin-mode "merlin" "Merlin mode." t)
+  (add-hook 'tuareg-mode-hook #'merlin-mode))
+
+(when (locate-library "utop")
+  (autoload 'utop "utop" "Toplevel for OCaml." t))
+
+(when (locate-library "camldebug")
+  (autoload 'camldebug "camldebug" "Run the Caml debugger." t))
+
+;;;; Server
 
 (require 'server)
-
 (setq server-name "std")
+(unless (server-running-p)
+  (server-start))
 
 (defun shutdown ()
-  "Save buffers, Quit, and Shutdown (kill) server"
+  "Save buffers and quit Emacs."
   (interactive)
   (save-some-buffers)
   (kill-emacs))
 
-;; compilation keybindings
+;;;; Compilation keybindings
 
-(global-set-key (kbd "C-c c") 'compile)
+(global-set-key (kbd "C-c c") #'compile)
+(global-set-key (kbd "C-c r") #'recompile)
 
-(global-set-key (kbd "C-c r") 'recompile)
+;;;; Go (optional)
 
-(add-hook
- 'go-mode-hook
- (lambda ()
-   (lsp-deferred)
-   (add-hook 'before-save-hook 'gofmt-before-save)
-   (setq-default)
-   (setq tab-width 4)
-   (setq standard-indent 4)
-   (setq indent-tabs-mode nil)))
+(add-hook 'go-mode-hook
+          (lambda ()
+            ;; lsp-mode is optional
+            (when (fboundp 'lsp-deferred)
+              (lsp-deferred))
+
+            ;; gofmt is part of go-mode; buffer-local hook
+            (when (fboundp 'gofmt-before-save)
+              (add-hook 'before-save-hook #'gofmt-before-save nil t))
+
+            (setq-local tab-width 4)
+            (setq-local standard-indent 4)
+            (setq-local indent-tabs-mode nil)))
