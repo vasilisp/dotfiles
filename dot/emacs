@@ -186,7 +186,23 @@
 ;;;; Magit
 
 (use-package magit
-  :ensure t
-  :bind
-  (("C-x g" . magit-status)
-   ("C-x M-g" . magit-dispatch)))
+    :ensure t
+    :bind
+    (("C-x g" . magit-status)
+     ("C-x M-g" . magit-dispatch)))
+
+;;;; custom Codex buffer
+
+(use-package eat
+    :ensure t)
+
+(defun codex-eat ()
+  "Run Codex directly in eat at the project root."
+  (interactive)
+  (let* ((project (project-current t))
+         (root (project-root project))
+         (default-directory root))
+    (eat "codex")))
+
+(with-eval-after-load 'project
+  (define-key project-prefix-map (kbd "x") #'codex-eat))
