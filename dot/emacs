@@ -112,6 +112,12 @@
 (global-set-key (kbd "C-c c") #'compile)
 (global-set-key (kbd "C-c r") #'recompile)
 
+;;;; F10 now used for the buffer menu
+
+(with-eval-after-load 'menu-bar
+  (global-set-key (kbd "<f9>") #'menu-bar-open)
+  (global-set-key (kbd "<f10>") #'buffer-menu-open))
+
 ;;;; Go (optional)
 
 (add-hook 'go-mode-hook
