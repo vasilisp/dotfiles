@@ -50,29 +50,29 @@
 ;;;; Markdown (optional)
 
 (use-package markdown-mode
-  :ensure t
-  :mode ("\\.md\\'" "\\.markdown\\'"))
+    :ensure t
+    :mode ("\\.md\\'" "\\.markdown\\'"))
 
 ;;;; OCaml tooling (optional, degrades gracefully)
 
 (use-package tuareg
-  :ensure t
-  :mode ("\\.mli?\\'")
-  :custom
-  (tuareg-in-indent 0)
-  :hook
-  (tuareg-mode . (lambda ()
-                   (add-hook 'before-save-hook
-                             #'delete-trailing-whitespace
-                             nil t))))
+    :ensure t
+    :mode ("\\.mli?\\'")
+    :custom
+    (tuareg-in-indent 0)
+    :hook
+    (tuareg-mode . (lambda ()
+                     (add-hook 'before-save-hook
+                               #'delete-trailing-whitespace
+                               nil t))))
 
 (when (and (executable-find "opam")
            (not (getenv "OPAM_SWITCH_PREFIX")))
   (ignore-errors
     (dolist (var
-             (car
-              (read-from-string
-               (shell-command-to-string "opam config env --sexp"))))
+              (car
+               (read-from-string
+                (shell-command-to-string "opam config env --sexp"))))
       (setenv (car var) (cadr var)))))
 
 (let ((op (getenv "OPAM_SWITCH_PREFIX")))
