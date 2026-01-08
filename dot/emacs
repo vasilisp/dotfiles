@@ -127,3 +127,46 @@
             (setq-local tab-width 4)
             (setq-local standard-indent 4)
             (setq-local indent-tabs-mode nil)))
+
+;; --- Rust (optional binaries) ---
+
+(use-package rust-mode
+    :ensure t
+    :mode ("\\.rs\\'")
+    :hook
+    (rust-mode . (lambda ()
+                   ;; Enable rustfmt-on-save only if rustfmt exists
+                   (when (executable-find "rustfmt")
+                     (setq-local rust-format-on-save t)))))
+
+(use-package cargo
+    :ensure t
+    :hook
+    ;; Only enable cargo-minor-mode if cargo exists
+    (rust-mode . (lambda ()
+                   (when (executable-find "cargo")
+                     (cargo-minor-mode 1)))))
+
+(use-package eglot
+    :ensure nil ;; built-in on Emacs 30
+    :hook
+    ;; Only enable LSP if rust-analyzer exists
+    (rust-mode . (lambda ()
+                   (when (executable-find "rust-analyzer")
+                     (eglot-ensure)))))
+
+(with-eval-after-load 'eglot
+  (setq eglot-send-changes-idle-time 1.0)
+  (add-to-list
+   'eglot-workspace-configuration
+   '(:rust-analyzer
+     (:procMacro (:enable :json-false)
+      :cargo (:allFeatures :json-false
+              :features []
+              :allTargets :json-false)
+      :checkOnSave (:enable t
+                    :command "check"
+                    :allTargets :json-false)
+      :inlayHints (:enable :json-false)
+      :diagnostics (:experimental (:enable :json-false))
+      :files (:excludeDirs ["target" "**/target" ".git" "node_modules"])))))
