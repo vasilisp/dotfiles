@@ -182,3 +182,11 @@
       :inlayHints (:enable :json-false)
       :diagnostics (:experimental (:enable :json-false))
       :files (:excludeDirs ["target" "**/target" ".git" "node_modules"])))))
+
+;;;; Magit
+
+(use-package magit
+  :ensure t
+  :bind
+  (("C-x g" . magit-status)
+   ("C-x M-g" . magit-dispatch)))
