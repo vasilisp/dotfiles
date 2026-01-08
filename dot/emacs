@@ -118,6 +118,12 @@
   (global-set-key (kbd "<f9>") #'menu-bar-open)
   (global-set-key (kbd "<f10>") #'buffer-menu-open))
 
+;;;; auto-revert for nicer AI agent interaction
+
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
+
 ;;;; Go (optional)
 
 (add-hook 'go-mode-hook
