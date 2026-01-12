@@ -191,43 +191,74 @@
     (("C-x g" . magit-status)
      ("C-x M-g" . magit-dispatch)))
 
-;;;; custom Claude buffer
+;;;; custom LLM agent buffer
 
 (use-package eat :ensure t)
 
-(defun claude-eat ()
+(defcustom llm-agent-command '("claude")
+  "LLM agent command to run."
+  :type '(repeat string))
+
+(defun llm--agent-buffer-name ()
+  (let* ((project (project-current t))
+         (root (project-root project))
+         (name (file-name-nondirectory (directory-file-name root))))
+    (format "*llm:%s*" name)))
+
+(defun llm--agent-buffer ()
+  (let ((buf (get-buffer (llm--agent-buffer-name))))
+    (unless buf
+      (user-error "No LLM buffer for this project; run `llm-eat` first"))
+    buf))
+
+(defun llm-eat ()
   (interactive)
   (let* ((project (project-current t))
          (root (project-root project))
-         (name (file-name-nondirectory (directory-file-name root)))
-         (buf-name (format "*claude:%s*" name))
-         (default-directory root))
+         (default-directory root)
+         (buf-name (llm--agent-buffer-name)))
     (if-let ((buf (get-buffer buf-name)))
         (pop-to-buffer buf)
-      (let ((buf (get-buffer-create buf-name)))
+      (let ((buf (get-buffer-create buf-name))
+            (cmd llm-agent-command))
+        (unless (and (listp cmd) (car cmd))
+          (user-error "llm-agent-command must be a non-empty list"))
         (with-current-buffer buf
           (eat-mode)
-          (eat-exec buf "claude" "claude" nil nil))
+          (eat-exec buf (car cmd) (car cmd) nil (cdr cmd)))
         (pop-to-buffer buf)))))
 
-(defun claude-send-region (start end)
+(defun llm-use-claude ()
+  (interactive)
+  (setq llm-agent-command '("claude"))
+  (message "LLM agent set to Claude"))
+
+(defun llm-use-codex ()
+  (interactive)
+  (setq llm-agent-command '("codex"))
+  (message "LLM agent set to Codex"))
+
+(defun llm-send-region (start end)
   (interactive "r")
   (unless (use-region-p)
     (user-error "No region selected"))
   (unless (buffer-file-name)
-    (user-error "Buffer must be visiting a file for Claude to access it"))
+    (user-error "Buffer must be visiting a file for the agent to access it"))
   (let* ((file (buffer-file-name))
          (line-start (line-number-at-pos start))
          (line-end (line-number-at-pos end))
-         (prompt (read-string "Claude prompt: "))
+         (prompt (read-string "LLM prompt: "))
          (message (format "%s (see %s:%d-%d)"
                           prompt file line-start line-end)))
-    (claude-eat)
-    (when-let ((terminal eat-terminal))
-      (eat-term-send-string terminal message))))
+    (let ((buf (llm--agent-buffer)))
+      (with-current-buffer buf
+        (unless eat-terminal
+          (user-error "LLM buffer has no active terminal"))
+        (eat-term-send-string eat-terminal message))
+      (pop-to-buffer buf))))
 
-(defun claude-fix-flymake ()
-  "Send the Flymake error at point to Claude for fixing.
+(defun llm-fix-flymake ()
+  "Send the Flymake error at point to the agent for fixing.
 Works both in source buffers and in Flymake diagnostics buffers."
   (interactive)
   (let ((diag (or (get-text-property (point) 'flymake-diagnostic)
@@ -243,11 +274,18 @@ Works both in source buffers and in Flymake diagnostics buffers."
              (line (with-current-buffer diag-buffer
                      (line-number-at-pos (flymake-diagnostic-beg diag))))
              (message (format "Fix this error: %s (see %s:%d)" text file line)))
-        (claude-eat)
-        (when-let ((terminal eat-terminal))
-          (eat-term-send-string terminal message))))))
+        (let ((buf (llm--agent-buffer)))
+          (with-current-buffer buf
+            (unless eat-terminal
+              (user-error "LLM buffer has no active terminal"))
+            (eat-term-send-string eat-terminal message))
+          (pop-to-buffer buf))))))
+
+(defalias 'claude-eat #'llm-eat)
+(defalias 'claude-send-region #'llm-send-region)
+(defalias 'claude-fix-flymake #'llm-fix-flymake)
 
 (with-eval-after-load 'project
-  (define-key project-prefix-map (kbd "l") #'claude-eat)
-  (define-key project-prefix-map (kbd "q") #'claude-send-region)
-  (define-key project-prefix-map (kbd "y") #'claude-fix-flymake))
+  (define-key project-prefix-map (kbd "l") #'llm-eat)
+  (define-key project-prefix-map (kbd "q") #'llm-send-region)
+  (define-key project-prefix-map (kbd "y") #'llm-fix-flymake))
