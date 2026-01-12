@@ -191,18 +191,63 @@
     (("C-x g" . magit-status)
      ("C-x M-g" . magit-dispatch)))
 
-;;;; custom Codex buffer
+;;;; custom Claude buffer
 
-(use-package eat
-    :ensure t)
+(use-package eat :ensure t)
 
-(defun codex-eat ()
-  "Run Codex directly in eat at the project root."
+(defun claude-eat ()
   (interactive)
   (let* ((project (project-current t))
          (root (project-root project))
+         (name (file-name-nondirectory (directory-file-name root)))
+         (buf-name (format "*claude:%s*" name))
          (default-directory root))
-    (eat "codex")))
+    (if-let ((buf (get-buffer buf-name)))
+        (pop-to-buffer buf)
+      (let ((buf (get-buffer-create buf-name)))
+        (with-current-buffer buf
+          (eat-mode)
+          (eat-exec buf "claude" "claude" nil nil))
+        (pop-to-buffer buf)))))
+
+(defun claude-send-region (start end)
+  (interactive "r")
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  (unless (buffer-file-name)
+    (user-error "Buffer must be visiting a file for Claude to access it"))
+  (let* ((file (buffer-file-name))
+         (line-start (line-number-at-pos start))
+         (line-end (line-number-at-pos end))
+         (prompt (read-string "Claude prompt: "))
+         (message (format "%s (see %s:%d-%d)"
+                          prompt file line-start line-end)))
+    (claude-eat)
+    (when-let ((terminal eat-terminal))
+      (eat-term-send-string terminal message))))
+
+(defun claude-fix-flymake ()
+  "Send the Flymake error at point to Claude for fixing.
+Works both in source buffers and in Flymake diagnostics buffers."
+  (interactive)
+  (let ((diag (or (get-text-property (point) 'flymake-diagnostic)
+                  (car (flymake-diagnostics (point))))))
+    (unless diag
+      (user-error "No Flymake diagnostic at point"))
+    (let* ((diag-buffer (flymake-diagnostic-buffer diag))
+           (file (and (buffer-live-p diag-buffer)
+                      (buffer-file-name diag-buffer))))
+      (unless file
+        (user-error "Diagnostic's buffer must be live and visiting a file"))
+      (let* ((text (flymake-diagnostic-text diag))
+             (line (with-current-buffer diag-buffer
+                     (line-number-at-pos (flymake-diagnostic-beg diag))))
+             (message (format "Fix this error: %s (see %s:%d)" text file line)))
+        (claude-eat)
+        (when-let ((terminal eat-terminal))
+          (eat-term-send-string terminal message))))))
 
 (with-eval-after-load 'project
-  (define-key project-prefix-map (kbd "x") #'codex-eat))
+  (define-key project-prefix-map (kbd "l") #'claude-eat)
+  (define-key project-prefix-map (kbd "q") #'claude-send-region)
+  (define-key project-prefix-map (kbd "y") #'claude-fix-flymake))
