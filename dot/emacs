@@ -239,6 +239,11 @@
   (setq llm-agent-command '("codex"))
   (message "LLM agent set to Codex"))
 
+(defun llm-use-gemini ()
+  (interactive)
+  (setq llm-agent-command '("gemini"))
+  (message "LLM agent set to gemini"))
+
 (defun llm-send-region (start end)
   (interactive "r")
   (unless (use-region-p)
@@ -281,10 +286,6 @@ Works both in source buffers and in Flymake diagnostics buffers."
               (user-error "LLM buffer has no active terminal"))
             (eat-term-send-string eat-terminal message))
           (pop-to-buffer buf))))))
-
-(defalias 'claude-eat #'llm-eat)
-(defalias 'claude-send-region #'llm-send-region)
-(defalias 'claude-fix-flymake #'llm-fix-flymake)
 
 (with-eval-after-load 'project
   (define-key project-prefix-map (kbd "l") #'llm-eat)
