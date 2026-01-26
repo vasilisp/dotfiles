@@ -162,26 +162,27 @@
 (use-package eglot
     :ensure nil ;; built-in on Emacs 30
     :hook
-    ;; Only enable LSP if rust-analyzer exists
-    (rust-mode . (lambda ()
-                   (when (executable-find "rust-analyzer")
-                     (eglot-ensure)))))
+    (rust-mode . eglot-ensure)
+    :config
+    (when (executable-find "rust-analyzer")
+      (add-to-list
+       'eglot-server-programs
+       '(rust-mode . ("rust-analyzer"))))
 
-(with-eval-after-load 'eglot
-  (setq eglot-send-changes-idle-time 1.0)
-  (add-to-list
-   'eglot-workspace-configuration
-   '(:rust-analyzer
-     (:procMacro (:enable :json-false)
-      :cargo (:allFeatures :json-false
-              :features []
-              :allTargets :json-false)
-      :checkOnSave (:enable t
-                    :command "check"
-                    :allTargets :json-false)
-      :inlayHints (:enable :json-false)
-      :diagnostics (:experimental (:enable :json-false))
-      :files (:excludeDirs ["target" "**/target" ".git" "node_modules"])))))
+    (setq eglot-send-changes-idle-time 1.0)
+
+    (add-to-list
+     'eglot-workspace-configuration
+     '(:rust-analyzer
+       (:procMacro (:enable :json-false)
+        :cargo (:allFeatures :json-false
+                :features []
+                :allTargets :json-false)
+        :checkOnSave (:enable t
+                      :command "check"
+                      :allTargets :json-false)
+        :inlayHints (:enable :json-false)
+        :files (:excludeDirs ["target" "**/target" ".git" "node_modules"])))))
 
 ;;;; Magit
 
