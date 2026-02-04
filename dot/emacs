@@ -198,6 +198,12 @@
     :ensure t
     :config (direnv-mode))
 
+;;; nix
+
+(use-package nix-mode
+    :ensure t
+    :mode "\\.nix\\'")
+
 ;;;; custom LLM agent buffer
 
 (use-package eat :ensure t)
