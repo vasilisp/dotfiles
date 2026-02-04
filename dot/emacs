@@ -184,13 +184,19 @@
         :inlayHints (:enable :json-false)
         :files (:excludeDirs ["target" "**/target" ".git" "node_modules"])))))
 
-;;;; Magit
+;;;; magit
 
 (use-package magit
     :ensure t
     :bind
     (("C-x g" . magit-status)
      ("C-x M-g" . magit-dispatch)))
+
+;;; direnv
+
+(use-package direnv
+    :ensure t
+    :config (direnv-mode))
 
 ;;;; custom LLM agent buffer
 
