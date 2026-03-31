@@ -159,30 +159,24 @@
                    (when (executable-find "cargo")
                      (cargo-minor-mode 1)))))
 
-(use-package eglot
-    :ensure nil ;; built-in on Emacs 30
-    :hook
-    (rust-mode . eglot-ensure)
+;;;; dumb-jump (ripgrep-based xref backend, no LSP needed)
+
+(use-package dumb-jump
+    :ensure t
     :config
-    (when (executable-find "rust-analyzer")
-      (add-to-list
-       'eglot-server-programs
-       '(rust-mode . ("rust-analyzer"))))
+    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
-    (setq eglot-send-changes-idle-time 1.0)
+;;;; flycheck + flycheck-rust (uses cargo check, no rust-analyzer)
 
-    (add-to-list
-     'eglot-workspace-configuration
-     '(:rust-analyzer
-       (:procMacro (:enable :json-false)
-        :cargo (:allFeatures :json-false
-                :features []
-                :allTargets :json-false)
-        :checkOnSave (:enable t
-                      :command "check"
-                      :allTargets :json-false)
-        :inlayHints (:enable :json-false)
-        :files (:excludeDirs ["target" "**/target" ".git" "node_modules"])))))
+(use-package flycheck
+    :ensure t
+    :hook
+    (rust-mode . flycheck-mode))
+
+(use-package flycheck-rust
+    :ensure t
+    :hook
+    (flycheck-mode . flycheck-rust-setup))
 
 ;;;; magit
 
