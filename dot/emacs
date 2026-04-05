@@ -186,12 +186,6 @@
     (("C-x g" . magit-status)
      ("C-x M-g" . magit-dispatch)))
 
-;;; direnv
-
-(use-package direnv
-    :ensure t
-    :config (direnv-mode))
-
 ;;; nix
 
 (use-package nix-mode
