@@ -1,5 +1,5 @@
 # if running bash
-if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ] ; then
+if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
 fi
 
@@ -13,19 +13,11 @@ case $KSH_VERSION in
     *) ;;
 esac
 
-# if user's private bin exists, add it to $PATH
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-# if dotfiles-associated bin exists, add it to $PATH
-if [ -d "$HOME/dotfiles/bin" ] ; then
-    PATH="$HOME/dotfiles/bin:$PATH"
-fi
-
-if [ -d "$HOME/.cargo/bin" ] ; then
-    PATH="$HOME/.cargo/bin:$PATH"
-fi
+# add to PATH if directory exists
+for _dir in "$HOME/bin" "$HOME/.local/bin" "$HOME/dotfiles/bin" "$HOME/.cargo/bin"; do
+    [ -d "$_dir" ] && PATH="$_dir:$PATH"
+done
+unset _dir
 
 if command -v go >/dev/null 2>&1 && [ -d "$(go env GOPATH)/bin" ]; then
     PATH="$(go env GOPATH)/bin:$PATH"
@@ -40,11 +32,3 @@ fi
     . "$HOME/.profile_local"
 
 PAGER=less; export PAGER
-
-if
-    [ -z "$DISPLAY" ] &&
-        [ "$(tty)" = "/dev/tty1" ] &&
-        [ -f "$HOME/.xinitrc" ]
-then
-  exec startx
-fi
