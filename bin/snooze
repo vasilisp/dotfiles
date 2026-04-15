@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if command -v zzz >/dev/null 2>&1; then
+    exec zzz
+elif command -v systemctl >/dev/null 2>&1; then
+    exec systemctl suspend
+else
+    echo "suspend: no supported suspend command found" >&2
+    exit 1
+fi
